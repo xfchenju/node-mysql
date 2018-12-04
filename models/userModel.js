@@ -22,7 +22,6 @@ class UserModel {
     }
 
     static async login(user) {
-        console.log(user, 'user');
         let { username, password } = user;
         let loginStatus = false;
 
@@ -34,11 +33,67 @@ class UserModel {
             }
         }).then((res)=>{
             if(res) {
-                loginStatus = true;
+                let reData = {
+                    id: res.id,
+                    username: res.username,
+                    avator: res.avator
+                }
+                loginStatus = reData;
+            }
+        });
+        return loginStatus;
+    }
+
+    // 注销
+    static async logout(id) {
+        await User.update({
+            rememberToken: ''
+        }, {
+            where: {
+                id: id
+            }
+        });
+        return true;
+    }
+
+    static async getAllUsers() {
+        let rowData = [];
+
+        await User.findAll({
+            raw: true
+        }).then((res)=>{
+            if(res) {
+                rowData = res;
+            }
+        })
+        
+        return rowData;
+    }
+
+    static async updateUserToken(id, token) {
+        await User.update({
+            rememberToken: token
+        }, {
+            where: {
+                id: id
             }
         });
 
-        return loginStatus;
+        return true;
+    }
+
+    static async getRememberTokenById(id) {
+        let rememberToken = '';
+        await User.findOne({
+            rememberToken
+        }, {
+            where: {
+                id: id
+            }
+        }).then((res)=>{
+            rememberToken = res;
+        });
+        return rememberToken;
     }
 }
 

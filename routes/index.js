@@ -14,4 +14,10 @@ router.post('/user/register', UserController.create);
 // 用户登录
 router.post('/user/login', UserController.login);
 
+// 获取所有用户
+router.get('/user/get-all-users', UserController.getAllUsers);
+
+// 注销
+router.get('/user/logout', UserController.logout);
+
 module.exports = router;
