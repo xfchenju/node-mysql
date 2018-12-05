@@ -22,7 +22,7 @@ module.exports = (sequelize, Sequelize) => {
             comment: '头像'
         },
         phoneNumber: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.STRING,
             field: 'phone_number',
             unique: true,
             comment: '手机号'

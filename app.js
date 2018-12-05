@@ -25,7 +25,8 @@ app.use(bodyparser({
 // jwt认证
 app.use(jwtKoa({secret: 'secret'}).unless({
     //数组中的路径不需要通过jwt验证
-    path: [/^\/api\/v1\/user\/login/],
+    path: [/^\/api\/v1\/user\/login/, 
+           /^\/api\/v1\/user\/register/],
 }));
 
 // token验证中间件

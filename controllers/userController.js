@@ -15,12 +15,34 @@ class userController {
     static async create(ctx) {
         const user = ctx.request.body;
 
-        await userModel.create(user);
+        let createRes = await userModel.create(user);
 
-        ctx.response.status = 200;
-        ctx.body = {
-            code: 200,
-            msg: '注册成功!'
+        if(createRes.code === 0) {
+            ctx.response.status = 200;
+            ctx.body = {
+                code: 200,
+                msg: '注册成功!'
+            }
+        }else {
+            if(createRes.isExistedUsername) {
+                ctx.response.status = 200;
+                ctx.body = {
+                    code: 205,
+                    msg: '该用户名已存在'
+                }
+            }else if(createRes.isExistedEmail) {
+                ctx.response.status = 200;
+                ctx.body = {
+                    code: 205,
+                    msg: '该邮箱已存在'
+                }
+            }else {
+                ctx.response.status = 500;
+                ctx.body = {
+                    code: 500,
+                    msg: '异常错误!'
+                }
+            }
         }
     }
 

@@ -11,16 +11,41 @@ class UserModel {
      * @returns {Promise<boolean>}
      */
     static async create(user) {
-        let { email, username, password, phone } = user;
+        let { email, username, password, phoneNumber, realname } = user;
 
+        let res = {
+            code: 0,
+            isExistedUsername: null,
+            isExistedEmail: null
+        };
+        // 检查唯一字段是否存在
+        res.isExistedUsername = await User.findOne({
+            where: {
+                username: username
+            }
+        });
+        res.isExistedEmail = await User.findOne({
+            where: {
+                email: email
+            }
+        });
+
+        if(res.isExistedUsername || res.isExistedEmail) {
+            res.code = 1;
+            return res;
+        }
+        // 创建账号操作
         await User.create({
             email,
             username,
             password,
-            phone
+            phoneNumber,
+            realname
         })
-        return true;
+        return res;
     }
+
+    static async getUserByName() {}
 
     static async login(user) {
         let { username, password } = user;
