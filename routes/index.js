@@ -15,9 +15,9 @@ router.post('/user/register', UserController.create);
 router.post('/user/login', UserController.login);
 
 // 获取所有用户
-router.get('/user/get-all-users', UserController.getAllUsers);
+router.get('/user/get-users-list', UserController.getUsersList);
 
 // 注销
-router.get('/user/logout', UserController.logout);
+router.post('/user/logout', UserController.logout);
 
 module.exports = router;

@@ -4,6 +4,7 @@ const util = require('util');
 const verify = util.promisify(jwt.verify); // 解密
 const secret = 'secret';
 const moment = require('moment');
+const qs = require('querystring');
 
 class userController {
     /**
@@ -27,7 +28,6 @@ class userController {
         const user = ctx.request.body;
         
         await userModel.login(user).then(async (res)=>{
-            console.log('res', res);
             if(res) {
                 // 生成token
                 const token = jwt.sign(res, secret, { expiresIn: '24h' });
@@ -60,8 +60,10 @@ class userController {
         })
     }
 
-    static async getAllUsers(ctx) {
-        await userModel.getAllUsers().then((res)=>{
+    // 获取用户列表
+    static async getUsersList(ctx) {
+        let request = qs.parse(ctx.request.querystring);
+        await userModel.getUsersList(request).then((res)=>{
             ctx.response.status = 200;
             ctx.body = {
                 data: {
@@ -70,27 +72,29 @@ class userController {
                 code: 200,
                 msg: '获取数据成功!'
             }
-        })
+        });
     }
 
     static async checkToken(ctx) {
         let tokenStatus = false;
-        let rememberToken = ctx.header.authorization;
+        let rememberToken = ctx.header.authorization.split(' ')[1];
         let id = ctx.state['user'].id;
         await userModel.getRememberTokenById(id).then(async(res)=>{
             if(rememberToken == res.rememberToken) {
                 tokenStatus = true;
             }
-            console.log(rememberToken, res.rememberToken)
         });
-        console.log('tokenStatus', tokenStatus);
         return tokenStatus;
     }
 
     static async logout(ctx) {
         var user = ctx.state['user'];
         await userModel.logout(user.id);
-        return true;
+        ctx.response.status = 200;
+        ctx.body = {
+            code: 200,
+            msg: '注销成功！'
+        }
     }
 }
 

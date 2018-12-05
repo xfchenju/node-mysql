@@ -10,6 +10,7 @@ const secret = 'secret';
 const moment = require('moment');
     
 const userController = require('./controllers/userController');
+
 /**
  * middlewares
  */
@@ -61,6 +62,7 @@ app.use(async(ctx, next) => {
             }
         }
     }
+    console.log('中间件第')
     return next();
 });
 
