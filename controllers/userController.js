@@ -118,6 +118,34 @@ class userController {
             msg: '注销成功！'
         }
     }
+
+    // 更新用户信息
+    static async updateUser(ctx) {
+        let user = ctx.request.body;
+        console.log(user, 'ctx-update');
+        let res = await userModel.updateUser(user);
+        if(res) {
+            ctx.response.status = 200;
+            ctx.body = {
+                code: 200,
+                msg: '更新成功！'
+            }
+        }
+    }
+
+    // 删除用户
+    static async deleteUser(ctx) {
+        console.log(ctx, 'ctx-delete')
+        let id = ctx.request.body.id;
+        let res = await userModel.deleteUser(id);
+        if(res) {
+            ctx.response.status = 200;
+            ctx.body = {
+                code: 200,
+                msg: '删除成功！'
+            }
+        }
+    }
 }
 
 module.exports = userController;

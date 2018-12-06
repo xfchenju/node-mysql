@@ -1,9 +1,10 @@
 const Koa = require('koa');
+const app = new Koa();
 const cors = require('koa-cors');
 const bodyparser = require('koa-bodyparser');
 const jwtKoa = require('koa-jwt');
 const index = require('./routes/index');
-const app = new Koa();
+const koaBody = require('koa-body');
 const jwt = require('jsonwebtoken');
 const secret = 'secret';
 
@@ -17,6 +18,14 @@ const userController = require('./controllers/userController');
 // 跨域
 app.use(cors());
 
+
+app.use(koaBody({
+    multipart: true,
+    formidable: {
+        maxFileSize: 400*1024*1024 // 设置上传文件大小最大限制，默认2M
+    }
+}));
+
 // http请求体解析
 app.use(bodyparser({
     enableTypes: ['json', 'form', 'text']
@@ -26,7 +35,9 @@ app.use(bodyparser({
 app.use(jwtKoa({secret: 'secret'}).unless({
     //数组中的路径不需要通过jwt验证
     path: [/^\/api\/v1\/user\/login/, 
-           /^\/api\/v1\/user\/register/],
+           /^\/api\/v1\/user\/register/,
+           /^\/api\/v1\/currency/,
+           /^\/public/],
 }));
 
 // token验证中间件
@@ -63,7 +74,7 @@ app.use(async(ctx, next) => {
             }
         }
     }
-    console.log('中间件第')
+    console.log('验证token通过')
     return next();
 });
 

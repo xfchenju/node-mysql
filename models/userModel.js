@@ -1,18 +1,22 @@
 const { sequelize } = require('../config/db');
 const User = sequelize.import('../schema/users');
 const moment = require('moment');
+const fs = require('fs');
 
 User.sync({force: false});
 
 class UserModel {
     /**
-     * 创建用户
-     * @param user
-     * @returns {Promise<boolean>}
+     *创建用户
+     *
+     * @static
+     * @param {*} user
+     * @returns
+     * @memberof UserModel
      */
     static async create(user) {
-        let { email, username, password, phoneNumber, realname } = user;
-
+        let { email, username, password, phoneNumber, realname, isAdmin, avator } = user;
+        console.log('user', user);
         let res = {
             code: 0,
             isExistedUsername: null,
@@ -40,13 +44,21 @@ class UserModel {
             username,
             password,
             phoneNumber,
-            realname
-        })
+            realname,
+            isAdmin,
+            avator
+        });
         return res;
     }
 
-    static async getUserByName() {}
-
+    /**
+     *登录接口
+     *
+     * @static
+     * @param {*} user
+     * @returns
+     * @memberof UserModel
+     */
     static async login(user) {
         let { username, password } = user;
         let loginStatus = false;
@@ -70,7 +82,15 @@ class UserModel {
         return loginStatus;
     }
 
-    // 注销
+    
+    /**
+     *注销接口
+     *
+     * @static
+     * @param {*} id
+     * @returns
+     * @memberof UserModel
+     */
     static async logout(id) {
         await User.update({
             rememberToken: ''
@@ -81,8 +101,14 @@ class UserModel {
         });
         return true;
     }
-
-    // 获取所有用户
+    
+    /**
+     *获取所有用户
+     *
+     * @static
+     * @returns
+     * @memberof UserModel
+     */
     static async getAllUsers() {
         let rowData = [];
 
@@ -96,8 +122,15 @@ class UserModel {
         
         return rowData;
     }
-
-    // 获取用户列表
+    
+    /**
+     *获取用户列表
+     *
+     * @static
+     * @param {*} request
+     * @returns
+     * @memberof UserModel
+     */
     static async getUsersList(request) {
         let rowData = [];
         // 用户名搜索
@@ -107,14 +140,15 @@ class UserModel {
         let sortRule = request.sortRule || '';
         let userOrder = [['id', 'desc']];
         if(fieldName && sortRule) {
-            userOrder.push([fieldName, sortRule]);
+            userOrder.splice(0, 0, [fieldName, sortRule]);
         }
         await User.findAll({
             raw: true,
             where: {
                 username: {
                     '$like': `%${name}%`
-                }
+                },
+                isDeleted: false
             },
             order: userOrder
         }).then((res)=>{
@@ -125,8 +159,16 @@ class UserModel {
         
         return rowData;
     }
-
-    // 更新用户的token
+    
+    /**
+     *更新用户的token
+     *
+     * @static
+     * @param {*} id
+     * @param {*} token
+     * @returns
+     * @memberof UserModel
+     */
     static async updateUserToken(id, token) {
         await User.update({
             rememberToken: token,
@@ -140,7 +182,14 @@ class UserModel {
         return true;
     }
 
-    // 获取用户的token根据id
+    /**
+     *获取用户的token根据id
+     *
+     * @static
+     * @param {*} id
+     * @returns
+     * @memberof UserModel
+     */
     static async getRememberTokenById(id) {
         let rememberToken = '';
         await User.findOne({
@@ -151,6 +200,63 @@ class UserModel {
             rememberToken = res;
         });
         return rememberToken;
+    }
+ 
+    /**
+     *更新用户信息
+     *
+     * @static
+     * @param {*} request
+     * @returns
+     * @memberof UserModel
+     */
+    static async updateUser(request) {
+        let { id, phoneNumber, realname, isAdmin, avator } = request;
+        // 查询原头像
+        let sourceArr = await User.findOne({
+            raw: true,
+            where: {
+                id: id
+            }
+        });
+        // 如果上传了新头像 这里要删除原头像
+        if(sourceArr.avator && sourceArr.avator != avator) {
+            fs.unlink(sourceArr.avator, (err) => {
+                if (err) throw err;
+                console.log('文件已删除');
+            });
+        }
+        let res = await User.update({
+            phoneNumber,
+            realname,
+            isAdmin,
+            avator
+        },{
+            where: {
+                id: id
+            }
+        })
+        return res;
+    }
+    
+    /**
+     *删除用户
+     *
+     * @static
+     * @param {*} id
+     * @returns
+     * @memberof UserModel
+     */
+    static async deleteUser(id) {
+        let res = await User.update({
+            rememberToken: '',
+            isDeleted: true
+        },{
+            where: {
+                id: id
+            }
+        });
+        return res;
     }
 }
 
