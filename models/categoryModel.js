@@ -78,6 +78,17 @@ class categoryModel {
         });
         return res;
     }
+
+    // 获取启用的分类
+    static async getActiveCategorys(request) {
+        let res = await Category.findAll({
+            raw: true,
+            where: {
+                status: 0
+            }
+        });
+        return res;
+    }
 }
 
 module.exports = categoryModel;

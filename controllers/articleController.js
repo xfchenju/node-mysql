@@ -2,7 +2,7 @@ const articleModel = require('../models/articleModel');
 const qs = require('querystring');
 
 class articleController {
-    // 获取分类列表
+    // 获取文章列表
     static async getArticles(ctx) {
         let request = qs.parse(ctx.request.querystring);
         let res = await articleModel.getArticles(request);
@@ -10,7 +10,7 @@ class articleController {
         ctx.response.status = 200;
         ctx.body = {
             data: {
-                categorys: res
+                articles: res
             },
             code: 200,
             msg: '获取数据成功!'
@@ -20,12 +20,12 @@ class articleController {
     // 获取文章详情
     static async getArticleDetail(ctx) {
         let request = qs.parse(ctx.request.querystring);
-        let res = await articleModel.getArticleDetail(request);
+        let res = await articleModel.getArticleDetail(request.id);
         
         ctx.response.status = 200;
         ctx.body = {
             data: {
-                categorys: res
+                detail: res
             },
             code: 200,
             msg: '获取数据成功!'
@@ -34,14 +34,10 @@ class articleController {
 
     // 新增文章
     static async createArticle(ctx) {
-        let request = ctx.request.body;
-        let res = await articleModel.createArticle(request);
+        let res = await articleModel.createArticle(ctx);
         
         ctx.response.status = 200;
         ctx.body = {
-            data: {
-                categorys: res
-            },
             code: 200,
             msg: '新增文章成功!'
         }
@@ -54,9 +50,6 @@ class articleController {
         
         ctx.response.status = 200;
         ctx.body = {
-            data: {
-                categorys: res
-            },
             code: 200,
             msg: '更新文章成功!'
         }
@@ -65,13 +58,10 @@ class articleController {
     // 删除文章
     static async deleteArticle(ctx) {
         let request = ctx.request.body;
-        let res = await articleModel.deleteArticle(request);
+        let res = await articleModel.deleteArticle(request.id);
         
         ctx.response.status = 200;
         ctx.body = {
-            data: {
-                categorys: res
-            },
             code: 200,
             msg: '删除文章成功!'
         }

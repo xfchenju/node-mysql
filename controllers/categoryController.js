@@ -17,6 +17,20 @@ class categoryController {
         }
     }
 
+    // 获取启用的分类
+    static async getActiveCategorys(ctx) {
+        let res = await categoryModel.getActiveCategorys();
+        
+        ctx.response.status = 200;
+        ctx.body = {
+            data: {
+                avtiveCategorys: res
+            },
+            code: 200,
+            msg: '获取数据成功!'
+        }
+    }
+
     // 新增分类
     static async createCategory(ctx) {
         let request = ctx.request.body;

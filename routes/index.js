@@ -32,6 +32,8 @@ router.post('/user/delete-user', UserController.deleteUser);
  */
 // 获取分类列表
 router.get('/category/get-categorys-list', CategoryController.getCategorys);
+// 获取启用的分类
+router.get('/category/get-active-categorys', CategoryController.getActiveCategorys);
 // 新建分类
 router.post('/category/create-category', CategoryController.createCategory);
 // 更新分类
