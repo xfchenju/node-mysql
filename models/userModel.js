@@ -258,6 +258,29 @@ class UserModel {
         });
         return res;
     }
+
+    static async changePassword(ctx) {
+        let { id, oldPassword, newPassword } = ctx.request.body;
+        console.log(id, oldPassword, newPassword);
+        let user = await User.findOne({
+            where: {
+                id: id
+            }
+        });
+        console.log('user.password', user.password);
+        if(user.password !== oldPassword) {
+            return false;
+        }
+ 
+        let res = await User.update({
+            password: newPassword
+        }, {
+            where: {
+                id: id
+            }
+        });
+        return res;
+    }
 }
 
 module.exports = UserModel;

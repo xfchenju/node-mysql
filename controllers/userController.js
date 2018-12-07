@@ -146,6 +146,18 @@ class userController {
             }
         }
     }
+
+    // 修改密码成功
+    static async changePassword(ctx) {
+        let res = await userModel.changePassword(ctx);
+        if(res) {
+            ctx.response.status = 200;
+            ctx.body = {
+                code: 200,
+                msg: '修改密码成功！'
+            }
+        }
+    }
 }
 
 module.exports = userController;

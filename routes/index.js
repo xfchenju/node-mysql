@@ -20,8 +20,12 @@ router.post('/user/register', UserController.create);
 router.post('/user/login', UserController.login);
 // 注销
 router.post('/user/logout', UserController.logout);
+// 修改密码
+router.post('/user/change-password', UserController.changePassword);
 // 获取所有用户
 router.get('/user/get-users-list', UserController.getUsersList);
+// 获取用户详情
+//router.get('/user/get-user-detail', UserController.getUserDetail);
 // 修改用户信息
 router.post('/user/update-user', UserController.updateUser);
 // 删除用户
