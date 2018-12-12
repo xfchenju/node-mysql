@@ -8,7 +8,8 @@ class articleModel {
     // 创建文章
     static async createArticle(ctx) {
         let author = ctx.state['user'].username;
-        let { title, content, categoryId, category, banner, isTop } = ctx.request.body;
+        let { title, content, categoryId, category, banner, isTop, tags } = ctx.request.body;
+
         let res = await Articles.create({
             title,
             content,
@@ -17,6 +18,7 @@ class articleModel {
             category,
             banner,
             isTop,
+            tags
         });
         return res;
     }

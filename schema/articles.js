@@ -23,6 +23,12 @@ module.exports = (sequelize, Sequelize) => {
             comment: '浏览次数',
             defaultValue: 0
         },
+        tags: {
+            type: Sequelize.STRING,
+            field: 'tags',
+            allowNull: false,
+            comment: '标签',
+        },
         categoryId: {
             type: Sequelize.INTEGER,
             field: 'category_id',

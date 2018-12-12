@@ -1,4 +1,5 @@
 const articleModel = require('../models/articleModel');
+const tagModel = require('../models/tagModel');
 const qs = require('querystring');
 
 class articleController {
@@ -34,7 +35,10 @@ class articleController {
 
     // 新增文章
     static async createArticle(ctx) {
-        let res = await articleModel.createArticle(ctx);
+        let tags = ctx.request.body.tags;
+
+        tagModel.checkTagsUnique(JSON.parse(tags));
+        await articleModel.createArticle(ctx);
         
         ctx.response.status = 200;
         ctx.body = {
