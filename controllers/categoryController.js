@@ -17,6 +17,21 @@ class categoryController {
         }
     }
 
+    // 获取分类列表及文章数
+    static async getCategorysAndCountArticles(ctx) {
+        let request = qs.parse(ctx.request.querystring);
+        let res = await categoryModel.getCategorysAndCountArticles(request);
+        
+        ctx.response.status = 200;
+        ctx.body = {
+            data: {
+                categorys: res
+            },
+            code: 200,
+            msg: '获取数据成功!'
+        }
+    }
+
     // 获取启用的分类
     static async getActiveCategorys(ctx) {
         let res = await categoryModel.getActiveCategorys();

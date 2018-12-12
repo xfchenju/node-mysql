@@ -43,6 +43,22 @@ class articleModel {
         return res;
     }
     
+    // 根据分类id获取文章列表
+    static async getArticlesByCategoryId(request) {
+        
+        let { categoryId, category } = request;
+        console.log(categoryId, 'categoryId');
+        // 排序
+        let order = [['id', 'desc']]
+        let res = await Articles.findAll({
+            where: {
+                category: category
+            },
+            order: [['created_at', 'desc']]
+        });
+        return res;
+    }
+    
     // 获取文章详情
     static async getArticleDetail(id) {
         let res = await Articles.findOne({

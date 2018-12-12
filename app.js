@@ -37,6 +37,7 @@ app.use(jwtKoa({secret: 'secret'}).unless({
     path: [/^\/api\/v1\/user\/login/, 
            /^\/api\/v1\/user\/register/,
            /^\/api\/v1\/currency/,
+           /^\/api\/v1\/home/,
            /^\/public/],
 }));
 
