@@ -36,6 +36,24 @@ class articleController {
         }
     }
 
+    // 根据标签获取文章列表
+    static async getArticlesByTag(ctx) {
+        let request = qs.parse(ctx.request.querystring);
+        let res = await articleModel.getArticlesByTag(request);
+        
+        ctx.response.status = 200;
+        ctx.body = {
+            data: {
+                articles: res,
+                category: {
+                    'name': 'name'
+                }
+            },
+            code: 200,
+            msg: '获取数据成功!'
+        }
+    }
+
     // 获取文章详情
     static async getArticleDetail(ctx) {
         let request = qs.parse(ctx.request.querystring);

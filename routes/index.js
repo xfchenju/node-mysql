@@ -17,9 +17,12 @@ router.get('/home/articles/get-articles', ArticleController.getArticles);
 router.get('/home/articles/get-article-detail', ArticleController.getArticleDetail);
 // 根据分类id获取文章列表
 router.get('/home/articles/get-articles-by-category-id', ArticleController.getArticlesByCategoryId);
+// 根据分类获取文章列表
+router.get('/home/articles/get-articles-by-tag', ArticleController.getArticlesByTag);
 // 分类列表
 router.get('/home/categories/get-categories', CategoryController.getCategorysAndCountArticles);
-
+// 获取标签列表
+router.get('/home/tags/get-tags', TagController.getTags);
 
 // 图片上传
 router.post('/currency/upload', CurrencyController.upload);
