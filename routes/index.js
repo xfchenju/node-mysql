@@ -2,6 +2,7 @@ const Router = require('koa-router')
 const UserController = require('../controllers/userController');
 const CategoryController = require('../controllers/categoryController');
 const ArticleController = require('../controllers/articleController');
+const TagController = require('../controllers/tagController');
 const CurrencyController = require('../controllers/currencyController');
 
 const router = new Router({
@@ -72,5 +73,8 @@ router.post('/article/create-article', ArticleController.createArticle);
 router.post('/article/update-article', ArticleController.updateArticle);
 // 删除文章
 router.post('/article/delete-article', ArticleController.deleteArticle);
+
+// 获取标签
+router.get('/tags/get-tags', TagController.getTags);
 
 module.exports = router;
